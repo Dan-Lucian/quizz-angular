@@ -1,0 +1,49 @@
+<div class="wrapper">
+  <h2 *ngIf="questions.length === 0">Loading...</h2>
+
+  <div *ngIf="questions.length !== 0 && answers.length < maxQuestions">
+    <h2>{{ questions[indexQuestionCurrent].body }}</h2>
+
+    <div>
+      <button
+        (click)="onClick(true, questions[indexQuestionCurrent].correctAnswer)"
+        type="button"
+      >
+        {{ questions[indexQuestionCurrent].correctAnswer }}
+      </button>
+      <button
+        (click)="onClick(false, questions[indexQuestionCurrent].answers[0])"
+        type="button"
+      >
+        {{ questions[indexQuestionCurrent].answers[0] }}
+      </button>
+      <button
+        (click)="onClick(false, questions[indexQuestionCurrent].answers[1])"
+        type="button"
+      >
+        {{ questions[indexQuestionCurrent].answers[1] }}
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="answers.length >= maxQuestions">
+    <ol>
+      <li *ngFor="let answer of answers">
+        <p>Question: {{ questions[answer.indexQuestion].body }}</p>
+        <p>
+          Your answer:
+          <span
+            [ngClass]="{ correct: answer.isCorrect, wrong: !answer.isCorrect }"
+          >
+            {{ answer.answer }}
+          </span>
+        </p>
+      </li>
+    </ol>
+
+    <p>
+      Your results:
+      {{ getResults() }}%
+    </p>
+  </div>
+</div>

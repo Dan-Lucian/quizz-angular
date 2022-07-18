@@ -1,0 +1,21 @@
+<div class="wrapper">
+  <ul>
+    <li *ngFor="let question of questions">{{ question.body }}</li>
+  </ul>
+
+  <form [formGroup]="formQuestion" (ngSubmit)="onSubmit()" class="form">
+    <label for="question">Question: </label>
+    <input type="text" id="question" formControlName="question" />
+  
+    <label for="answer-correct">Correct answer: </label>
+    <input type="text" id="answer-correct" formControlName="answerCorrect" />
+  
+    <label for="answer-wrong-1">Wrong answer: </label>
+    <input type="text" id="answer-wrong-1" formControlName="answerWrong1" />
+  
+    <label for="answer-wrong-2">Wrong answer: </label>
+    <input type="text" id="answer-wrong-2" formControlName="answerWrong2" />
+  
+    <button class="button" type="submit">Submit</button>
+  </form>
+</div>
