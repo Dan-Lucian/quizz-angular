@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Question } from '../interfaces/question';
 import { Answer } from '../interfaces/answer';
 import { QuestionService } from '../question.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-page-quizz',
@@ -10,10 +11,12 @@ import { QuestionService } from '../question.service';
   styleUrls: ['./page-quizz.component.scss'],
 })
 export class PageQuizzComponent implements OnInit {
-  maxQuestions = 5;
-  questions: Question[] = [];
-  indexQuestionCurrent: number = 0;
-  answers: Answer[] = [];
+  public maxQuestions = 5;
+  public questions: Question[] = [];
+  public indexQuestionCurrent: number = 0;
+  public answers: Answer[] = [];
+
+  private _subscriptions?: Array<Subscription>;
 
   constructor(private questionService: QuestionService) {}
 
@@ -21,10 +24,18 @@ export class PageQuizzComponent implements OnInit {
     this.getQuestions();
   }
 
+  ngOnDestroy(): void {
+    this._subscriptions?.forEach((subscription) => {
+      subscription.unsubscribe();
+    });
+  }
+
   getQuestions(): void {
-    this.questionService
-      .get()
-      .subscribe((questions) => (this.questions = questions));
+    this._subscriptions?.push(
+      this.questionService
+        .get()
+        .subscribe((questions) => (this.questions = questions))
+    );
   }
 
   onClick(isCorrect: boolean, answer: string): void {
@@ -36,11 +47,11 @@ export class PageQuizzComponent implements OnInit {
 
     if (this.indexQuestionCurrent >= this.maxQuestions) return;
 
-    this.incrementIndexQuestion();
+    this._incrementIndexQuestion();
     console.log(`answers: `, this.answers);
   }
 
-  private incrementIndexQuestion(): void {
+  private _incrementIndexQuestion(): void {
     this.indexQuestionCurrent += 1;
   }
 

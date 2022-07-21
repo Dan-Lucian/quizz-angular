@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
+import { catchError, Observable, of, tap } from 'rxjs';
 
 import { Question } from './interfaces/question';
 
@@ -8,15 +8,15 @@ import { Question } from './interfaces/question';
   providedIn: 'root',
 })
 export class QuestionService {
-  private urlApi = 'https://62d522585112e98e48593d85.mockapi.io/questions-2';
-  private httpOptions = {
+  private _urlApi = 'https://62d522585112e98e48593d85.mockapi.io/questions-2';
+  private _httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
 
   constructor(private httpClient: HttpClient) {}
 
   get(): Observable<Question[]> {
-    return this.httpClient.get<Question[]>(this.urlApi).pipe(
+    return this.httpClient.get<Question[]>(this._urlApi).pipe(
       tap((questions) =>
         this.log(`fetched questions: ${JSON.stringify(questions, null, 2)}`)
       ),
@@ -26,7 +26,7 @@ export class QuestionService {
 
   add(question: Question): Observable<Question> {
     return this.httpClient
-      .post<Question>(this.urlApi, question, this.httpOptions)
+      .post<Question>(this._urlApi, question, this._httpOptions)
       .pipe(
         tap((question: Question) =>
           this.log(`added question: ${question.body}`)
@@ -36,7 +36,7 @@ export class QuestionService {
   }
 
   /** Log a QuestionService message with the MessageService */
-  private log(message: string) {
+  private log(message: string): void {
     console.log(`QuestionService: ${message}`);
     // this.messageService.add(`QuestionService: ${message}`);
   }
